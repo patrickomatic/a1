@@ -1,0 +1,19 @@
+[package]
+authors = ["Patrick Carroll <patrick@patrickomatic.com>"]
+description = "A package for converting to and from A1 spreadsheet notation"
+documentation = "https://docs.rs/a1"
+homepage = "https://github.com/patrickomatic/a1"
+keywords = ["a1", "notation", "spreadsheet", "csv", "reference"]
+license = "MIT"
+name = "a1"
+repository = "https://github.com/patrickomatic/a1"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "^1", features = ["derive"], optional = true }
+rkyv = { version = "^0.7.44", features = ["std", "bytecheck", "validation"], optional = true }
+
+[features]
+rkyv = ["dep:rkyv"]
+serde = ["dep:serde"]
