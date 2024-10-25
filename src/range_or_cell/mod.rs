@@ -16,15 +16,17 @@ pub mod iterator;
 )]
 #[cfg_attr(
     feature = "rkyv",
-    archive(bound(serialize = "__S: rkyv::ser::ScratchSpace + rkyv::ser::Serializer"))
-)]
-#[cfg_attr(feature = "rkyv", archive(check_bytes))]
+    rkyv(serialize_bounds(
+    __S: rkyv::ser::Writer + rkyv::ser::Allocator,
+    __S::Error: rkyv::rancor::Source,
+)))]
 #[cfg_attr(
     feature = "rkyv",
-    archive_attr(check_bytes(
-        bound = "__C: rkyv::validation::ArchiveContext, <__C as rkyv::Fallible>::Error: std::error::Error"
-    ))
+    rkyv(deserialize_bounds(__D::Error: rkyv::rancor::Source))
 )]
+#[cfg_attr(feature = "rkyv", rkyv(bytecheck(
+    bounds(__C: rkyv::validation::ArchiveContext)
+)))]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[derive(Clone, Debug, PartialEq)]
 pub enum RangeOrCell {
@@ -40,7 +42,7 @@ pub enum RangeOrCell {
     /// A set of cells and ranges
     ///
     /// Note: `rkyv` requires that we add the `omit_bounds` for anything self-referential.
-    NonContiguous(#[cfg_attr(feature = "rkyv", omit_bounds, archive_attr(omit_bounds))] Vec<Self>),
+    NonContiguous(#[cfg_attr(feature = "rkyv", rkyv(omit_bounds))] Vec<Self>),
 
     /// A range between two positions
     ///
