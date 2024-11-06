@@ -15,7 +15,6 @@
 //! * [Refer to Cells and Ranges by Using A1 Notation](https://learn.microsoft.com/en-us/office/vba/excel/concepts/cells-and-ranges/refer-to-cells-and-ranges-by-using-a1-notation)
 //!
 use crate::RangeOrCell;
-use std::str;
 
 mod display;
 mod from_str;
@@ -73,9 +72,9 @@ impl A1 {
     }
 
     /// Clone into a new `A1` with the given `sheet_name`
-    pub fn with_sheet_name(self, sheet_name: &str) -> Self {
+    pub fn with_sheet_name<S: Into<String>>(self, sheet_name: S) -> Self {
         Self {
-            sheet_name: Some(sheet_name.to_owned()),
+            sheet_name: Some(sheet_name.into()),
             ..self
         }
     }
